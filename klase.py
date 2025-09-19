@@ -1,6 +1,6 @@
 import datetime 
 
-CONST_STATUS = ["naručeno", "u pripremi", "spremno", "dostavljeno"]
+CONST_STATUS = ["naruceno", "u pripremi", "spremno", "dostavljeno"]
 CONST_VRSTA = ["hrana", "pice"]
 CONST_UKUS = ["slatko", "ljuto", "slano"]
 
@@ -26,18 +26,12 @@ class Prodavac(Osoba):
 class Narudzbina:
     def __init__(self, id=None, vreme_porucivanja=None, kupac=None, proizvodi=None):
         self.id = id
-        if vreme_porucivanja :
-            self.vreme_porucivanja = vreme_porucivanja     
-        else:
-            datetime.datetime.now()
-        
-        self.status = CONST_STATUS[0]  
+        self.vreme_porucivanja = vreme_porucivanja or datetime.now().date()
+        self.status = CONST_STATUS[0]
         self.kupac = kupac
-        self.proizvodi = proizvodi 
-        
-        self.ukupnaCena = 0
-        for proizvod in proizvodi:
-            self.ukupna_cena += proizvod.cena
+        self.proizvodi = proizvodi or []
+
+        self.ukupnaCena = sum(int(p.cena) for p in self.proizvodi)
 
 
 class Proizvod:
