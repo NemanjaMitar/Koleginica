@@ -53,11 +53,11 @@ def uloguj_se():
     for kupac in kupci:
         if kupac.email == email and kupac.sifra.rstrip("\n") == sifra:
             povratna_vrednost = 0
-            return povratna_vrednost
+            return povratna_vrednost, kupac.id
         
     for prod in prodavci:
         if prod.email == email and prod.sifra ==sifra:
             povratna_vrednost = 1
-            return povratna_vrednost
+            return povratna_vrednost, prod.id
     
-    return povratna_vrednost
+    return povratna_vrednost,0
