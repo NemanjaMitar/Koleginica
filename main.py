@@ -1,7 +1,7 @@
 from klase import Osoba, Kupac, Narudzbina, Prodavac, Proizvod
 from fajlovi import ucitaj_kupce,sacuvaj_kupce
 from registacija import registruj_novog_kupca, CONST_PUTANJA_KUPCI, uloguj_se
-from meniji import kupac_meni
+from meniji import kupac_meni, prodavac_meni
 
 if __name__ == "__main__":
     # Ucitaj kupce
@@ -24,13 +24,13 @@ if __name__ == "__main__":
             # nakon registracije opet nudimo meni za neulogovanog korisnika
             print("Vraćate se u meni za neulogovanog korisnika...")
         elif izbor == "3":
-            uloga = uloguj_se()
+            uloga,id = uloguj_se()
             if uloga == -1:
                 continue
             elif uloga == 1: # Prodavac
-                print("Pozdrav prodavac")
+                prodavac_meni(id)
             elif uloga == 0: # Kupac
-                kupac_meni()
+                kupac_meni(id)
         else:
             sacuvaj_kupce(CONST_PUTANJA_KUPCI, kupci)
             exit()
