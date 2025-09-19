@@ -1,5 +1,8 @@
-from klase import Kupac, Prodavac
+from klase import Kupac, Narudzbina, Prodavac, Proizvod
+from datetime import datetime
 
+CONST_PUTANJA_PROIZVODI = 'tabela_proizvoda.txt'
+CONST_PUTANJA_KUPCI = 'kupci.txt'
 def sacuvaj_kupce(putanja, kupci):
     fajl =  open(putanja, 'w')
     linije = []
@@ -11,7 +14,25 @@ def sacuvaj_kupce(putanja, kupci):
     fajl.close()
     return
 
+def sacuvaj_narudzbinu(putanja, narudzbina):
+    '''
+    narudzbine = ucitaj_narudzbine(putanja)
+    fajl =  open(putanja, 'w')
+    linije = []
+    for n in narudzbine:
+        if n.id == narudzbina.id:
+            proizvodi_str = ",".join(narudzbina.proizvodi)
+            linija = f"{n.id}|{narudzbina.vreme_porucivanja}|{narudzbina.status}|{narudzbina.kupac.ime}|{narudzbina.ukupnaCena}|{proizvodi_str}"
+        else:
+            proizvodi_str = ",".join(n.proizvodi)
+            linija = f"{n.id}|{n.vreme_porucivanja}|{n.status}|{n.kupac.ime}|{n.ukupnaCena}|{proizvodi_str}"
+        linije.append(linija)      
 
+    
+    fajl.writelines(linije)
+    fajl.close()
+    '''
+    print("cao")
 def ucitaj_kupce(putanja):
     kupci = []
     fajl =  open(putanja, 'r')
@@ -44,3 +65,60 @@ def ucitaj_prodavce(putanja):
         prodavci.append(prodavac)
     fajl.close()
     return prodavci
+
+def ucitaj_proizvode(putanja):
+    proizvodi = []
+    fajl =  open(putanja, 'r')
+    linije = fajl.readlines()
+    for linija in linije:
+        podeljena_linija = linija.split("|")
+        id = podeljena_linija[0]
+        vrsta = podeljena_linija[1]
+        ukus = podeljena_linija[2]
+        naziv = podeljena_linija[3]
+        vreme_pripreme = podeljena_linija[4]
+        cena = podeljena_linija[5]
+
+        proizvod = Proizvod(id,vrsta, ukus, naziv, vreme_pripreme, cena)
+        proizvodi.append(proizvod)
+    fajl.close()
+    return proizvodi
+
+def ucitaj_narudzbine(putanja):
+    narudzbine = []
+    with open(putanja, 'r') as fajl:
+        linije = fajl.readlines()
+
+    kupci = ucitaj_kupce(CONST_PUTANJA_KUPCI)
+    proizvodi = ucitaj_proizvode(CONST_PUTANJA_PROIZVODI)
+
+    for linija in linije:
+        podeljena_linija = linija.strip().split("|")
+        id = int(podeljena_linija[0])
+        vreme_porucivanja = datetime.strptime(podeljena_linija[1], "%Y-%m-%d").date()
+        status = podeljena_linija[2]
+        kupac_id = podeljena_linija[3]
+        ukupna_cena = int(podeljena_linija[4])
+
+        # pronađi kupca
+        kupac = None
+        for k in kupci:
+            if str(k.id) == str(kupac_id) or k.ime == kupac_id:
+                kupac = k
+                break
+
+        # pronađi proizvode
+        proizvodi_narudzbine = podeljena_linija[5].split(',')
+        svi_pro = []
+        for pid in proizvodi_narudzbine:
+            for p in proizvodi:
+                if str(p.id) == pid:
+                    svi_pro.append(p)
+
+        narudzbina = Narudzbina(id, vreme_porucivanja, kupac, svi_pro)
+        narudzbina.status = status
+        narudzbina.ukupnaCena = ukupna_cena
+
+        narudzbine.append(narudzbina)
+
+    return narudzbine
