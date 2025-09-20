@@ -1,0 +1,4 @@
+1|pice|slatko|sok|30|100
+2|hrana|slano|pizza|25|300
+3|pice|slatko|gazirani sok|10|500
+4|hrana|slano|cevapi|45|800
